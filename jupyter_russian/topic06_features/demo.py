@@ -61,8 +61,8 @@ class FeatureEngineer(TransformerMixin):
                              ):
             self.apply(df, k, condition)
 
-        df['bathrooms'] = df['bathrooms'].apply(lambda x: x if x < 5 else 5)
-        df['bedrooms'] = df['bedrooms'].apply(lambda x: x if x < 5 else 5)
+        df['bathrooms'] = df['bathrooms'].apply(lambda x: min(x, 5))
+        df['bedrooms'] = df['bedrooms'].apply(lambda x: min(x, 5))
         df["num_photos"] = df["photos"].apply(len)
         df["num_features"] = df["features"].apply(len)
         created = pd.to_datetime(df.pop("created"))

@@ -156,15 +156,14 @@ def create_next_candidates(prev_candidates, length):
     if length < 3:
         return list(tmp_next_candidates)
 
-    # Filter candidates that all of their subsets are
-    # in the previous candidates.
-    next_candidates = [
-        candidate for candidate in tmp_next_candidates
+    return [
+        candidate
+        for candidate in tmp_next_candidates
         if all(
-            True if frozenset(x) in prev_candidates else False
-            for x in combinations(candidate, length - 1))
+            frozenset(x) in prev_candidates
+            for x in combinations(candidate, length - 1)
+        )
     ]
-    return next_candidates
 
 
 def gen_support_records(transaction_manager, min_support, **kwargs):
@@ -370,7 +369,7 @@ def load_transactions(input_file, **kwargs):
     """
     delimiter = kwargs.get('delimiter', '\t')
     for transaction in csv.reader(input_file, delimiter=delimiter):
-        yield transaction if transaction else ['']
+        yield transaction or ['']
 
 
 def dump_as_json(record, output_file):
@@ -387,7 +386,7 @@ def dump_as_json(record, output_file):
         """
         if isinstance(value, frozenset):
             return sorted(value)
-        raise TypeError(repr(value) + " is not JSON serializable")
+        raise TypeError(f"{repr(value)} is not JSON serializable")
 
     converted_record = record._replace(
         ordered_statistics=[x._asdict() for x in record.ordered_statistics])

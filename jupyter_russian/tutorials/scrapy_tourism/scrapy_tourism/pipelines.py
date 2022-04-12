@@ -12,8 +12,9 @@ class GeocoderPipeline(object):
         lat, lon = None, None
         if response.status_code == 200:
             data = response.json()
-            geocoder_objects = data['response']['GeoObjectCollection']['featureMember']
-            if geocoder_objects:
+            if geocoder_objects := data['response']['GeoObjectCollection'][
+                'featureMember'
+            ]:
                 coordinates = geocoder_objects[0]['GeoObject']['Point']['pos'].split()
                 lat, lon = float(coordinates[1]), float(coordinates[0])
 
